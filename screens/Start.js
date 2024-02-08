@@ -1,8 +1,9 @@
 import { View, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Input from "../components/Input";
+import UserInfoInput from "../components/UserInfoInput";
 import MyButton from "../components/MyButton";
+import * as Theme from '../src/styles'; 
 
 const Start = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -40,18 +41,18 @@ const Start = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View >
-        <Input
+        <UserInfoInput
           label="Email Address"
           value={email}
           onChangeText={setEmail}
           error={emailError}
-        ></Input>
-        <Input
+        ></UserInfoInput>
+        <UserInfoInput
           label="Phone Number"
           value={number}
           onChangeText={setNumber}
           error={numberError}
-        ></Input>
+        ></UserInfoInput>
       </View>
       <View style={styles.buttonsContainer}>
         <MyButton
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   header: {
-    color: "purple",
+    color:  Theme.colors.primary,
     fontSize: 24,
     marginBottom: "10%",
   },

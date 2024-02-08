@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import * as Theme from "../src/styles";
 const formatDateToCustomString = (dateString) => {
   // Define the options for date formatting
   const options = {
@@ -47,7 +47,6 @@ export const MyDatepicker = ({ label, onValueChange }) => {
     setDate(currentDate);
     setDateText(formatDateToCustomString(currentDate)); // 更新TextInput显示的日期
     onValueChange(formatDateToCustomString(currentDate));
-
   };
 
   const showDatepicker = () => {
@@ -92,6 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
+  
   },
   wrapper: {
     width: "100%",
@@ -102,24 +102,24 @@ const styles = StyleSheet.create({
   dateInputTouchable: {
     marginVertical: 8,
 
-    borderColor: "darkblue",
+    borderColor: Theme.colors.primary,
     borderRadius: 5,
   },
   dateInput: {
-    textAlign: 'left',
+    textAlign: "left",
 
     width: "100%",
     borderRadius: 5,
     padding: 10,
-    fontSize: 18, // 根据需要调整字体大小
-    color: "darkblue",
+    fontSize: Theme.fontSizes.medium,
+    color: Theme.colors.primary,
 
     borderWidth: 2, // 添加边框宽度以显示边框
-    borderColor: "darkblue",
+    borderColor: Theme.colors.primary,
   },
   inputLabel: {
-    color: "darkblue",
-    fontSize: 15,
+    color: Theme.colors.primary,
+    fontSize: Theme.fontSizes.small,
 
     fontWeight: "bold",
   },

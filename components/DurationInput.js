@@ -1,6 +1,6 @@
 import { View, Text,TextInput,StyleSheet } from 'react-native'
 import React from 'react'
-
+import * as Theme from '../src/styles'; 
 const DurationInput = ({value, onValueChange,label}) => {
   const stringValue = value.toString();
 
@@ -27,16 +27,16 @@ const styles = StyleSheet.create({
       width: '100%', // 如果你希望输入框宽度充满容器，可以设置为100%
       borderRadius: 5,
       padding: 10,
-      fontSize: 18, // 根据需要调整字体大小
+      fontSize:  Theme.fontSizes.medium,
       borderWidth: 2, // 添加边框宽度以显示边框
-      borderColor: 'darkblue',
+      borderColor: Theme.colors.primary,
       textAlign: 'left',
-      color:'darkblue',
+      color:Theme.colors.primary,
       marginVertical: 5, // 垂直间距，替代单独的margin
   },
   inputLabel:{
-      color: 'darkblue',
-      fontSize: 15,
+      color: Theme.colors.primary,
+      fontSize:  Theme.fontSizes.small,
       marginBottom: 10, 
       fontWeight: 'bold',
   },

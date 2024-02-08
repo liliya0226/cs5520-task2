@@ -4,13 +4,14 @@ import AllActivities from "../screens/AllActivities";
 import SpecialActivities from "../screens/SpecialActivities";
 import { StyleSheet } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
-import MyButton from "../components/MyButton";
+import * as Theme from '../src/styles'; 
 const Tab = createBottomTabNavigator();
 
 const styles = StyleSheet.create({
   tabBarStyle: {
-    backgroundColor: "#00008B",
+    backgroundColor: Theme.colors.primary,
     height: "12%",
+    paddingBottom: "6%",
   },
   tabBarActiveTintColor: "gold",
   tabBarInactiveTintColor: "gray",
@@ -41,7 +42,6 @@ export default function MyTabs() {
         options={() => ({
           headerShown: false,
           headerBackTitle: "",
-
         })}
       />
       <Tab.Screen

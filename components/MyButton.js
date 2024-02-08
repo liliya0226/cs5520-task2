@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import * as Theme from '../src/styles'; 
 
 const MyButton = ({ title, onPress, initialTextColor, pressedTextColor }) => {
   const [isPressed, setIsPressed] = useState(false);
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: Theme.fontSizes.medium,
     textAlign: 'center',
   },
 });

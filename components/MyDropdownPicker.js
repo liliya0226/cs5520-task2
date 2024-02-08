@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useState } from "react";
+import * as Theme from '../src/styles'; 
 const MyDropdownPicker = ({ onValueChange,label}) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -33,8 +34,8 @@ const MyDropdownPicker = ({ onValueChange,label}) => {
           setItems={setItems}
           style={styles.picker}
           textStyle={{
-            color:'darkblue',
-            fontSize: 18,
+            color:Theme.colors.primary,
+            fontSize: Theme.fontSizes.medium,
           }}
           placeholder="Select An Activity"
 
@@ -55,8 +56,8 @@ const styles = StyleSheet.create({
   
   },
   picker: {
-    backgroundColor: "rgb(204, 229, 255)",
-    borderColor: 'darkblue',
+    backgroundColor: Theme.colors.light,
+    borderColor: Theme.colors.primary,
     width: '100%',
     
 
@@ -66,9 +67,9 @@ const styles = StyleSheet.create({
     marginBottom: "3%",
     alignItems: "flex-start",
     fontWeight: 'bold',
-    borderColor: 'darkblue',
-    fontSize: 18,
-    color: 'darkblue',
+    borderColor: Theme.colors.primary,
+    fontSize: Theme.fontSizes.medium,
+    color: Theme.colors.primary,
   },
 });
 

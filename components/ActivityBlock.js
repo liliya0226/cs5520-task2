@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-
+import * as Theme from '../src/styles'; 
 const ActivityBlock = ({ category, duration, date }) => {
   return (
     <View style={styles.blockContainer}>
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "start",
-    backgroundColor: "darkblue", // This is a placeholder color
+    backgroundColor: Theme.colors.primary, // This is a placeholder color
     padding: 10,
     borderRadius: 10,
     marginLeft: "3%",
@@ -36,11 +36,11 @@ const styles = StyleSheet.create({
     flex: 1.4,
   },
   categoryText: {
-    color: "#FFFFFF",
+    color: Theme.colors.secondary,
     // marginRight: 5, // Adjust the spacing based on your icon
     flex: 1,
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: Theme.fontSizes.small,
   },
   warningIcon: {
     width: 30, // Set the size of your icon
@@ -49,11 +49,11 @@ const styles = StyleSheet.create({
     flex: 0.7,
   },
   dateText: {
-    color: "darkblue",
-    backgroundColor: "#FFFFFF",
+    color: Theme.colors.primary,
+    backgroundColor: Theme.colors.secondary,
     // You might want to add a border and padding to resemble the button
     borderWidth: 1,
-    borderColor: "#FFFFFF",
+    borderColor: Theme.colors.secondary,
     paddingVertical: 5,
     paddingHorizontal: 5,
     marginRight: "1%",
@@ -63,11 +63,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   durationText: {
-    color: "darkblue",
-    backgroundColor: "#FFFFFF",
+    color: Theme.colors.primary,
+    backgroundColor: Theme.colors.secondary,
     // You might want to add a border and padding to resemble the button
     borderWidth: 1,
-    borderColor: "#FFFFFF",
+    borderColor: Theme.colors.secondary,
     paddingVertical: 5,
     // paddingHorizontal: 5,
     borderRadius: 5,

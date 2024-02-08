@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { View, StyleSheet, Button } from "react-native";
+import { Text,View, StyleSheet } from "react-native";
 
 import MyDropdownPicker from "../components/MyDropdownPicker";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { MyDatepicker } from "../components/MyDatepicker";
 import { Alert } from "react-native";
 import { useActivitiesList } from "../contexts/ActivitiesContext";
-
+import * as Theme from "../src/styles";
 const AddActivity = () => {
   const { addActivity } = useActivitiesList();
   const navigation = useNavigation();
@@ -26,7 +26,6 @@ const AddActivity = () => {
   };
   const handleDateChange = (newDate) => {
     setDate(newDate);
-
   };
   const handleCancel = () => {
     navigation.goBack();
@@ -34,7 +33,6 @@ const AddActivity = () => {
 
   const validateUserEntries = () => {
     let valid = true;
-
 
     // Validate category is not null or empty
     if (!category || category.trim() === "") {
@@ -54,12 +52,11 @@ const AddActivity = () => {
       console.log("Date must be selected.");
       valid = false;
     }
- 
+
     return valid;
   };
 
   const handleSave = () => {
-
     if (validateUserEntries()) {
       // Make sure to call the function with ()
 
@@ -72,7 +69,7 @@ const AddActivity = () => {
       setCategory("");
       setDate("");
       setDuration("");
-  
+
       navigation.goBack(); // If validation passes, navigate back
     } else {
       // If validation fails, show an alert using Alert.alert
@@ -90,7 +87,7 @@ const AddActivity = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.dropdownContainer}>
         <MyDropdownPicker
-          label="Activities*"
+          label="Activities *"
           onValueChange={handleCategoryChange}
         ></MyDropdownPicker>
       </View>
@@ -122,40 +119,44 @@ const AddActivity = () => {
           pressedTextColor="white"
         ></MyButton>
       </View>
+      {/* <Text>Hi</Text> */}
     </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start", // 确保内容垂直居中
-    alignItems: "center", // 水平居中对齐子元素
-    padding: 20, // 添加一些内边距
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 20,
   },
   inputContainer: {
-    width: "100%", // 确保宽度填满可用空间
+    width: "100%",
     justifyContent: "flex-start",
     flex: 1,
   },
   dropdownContainer: {
-    width: "100%", // 确保宽度填满可用空间
+    width: "100%",
 
     justifyContent: "flex-start",
-    zIndex: 3,
+    zIndex: 5,
     flex: 2,
   },
   buttonsContainer: {
     flexDirection: "row",
     width: "100%",
-    justifyContent: "space-around", // 在按钮之间提供等间距
-
-    zIndex: 1,
+    justifyContent: "space-around",
     flex: 2,
+    zIndex: 1,
+    position:'absoulte',
   },
   datePickerContainer: {
     width: "100%",
-    zIndex: 2,
+    zIndex: 4,
     flex: 6,
+    marginTop: "3%",
+    // position:'absoulte',
+    // backgroundColor: "red",
   },
 });
 

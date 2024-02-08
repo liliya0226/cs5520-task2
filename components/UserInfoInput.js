@@ -1,7 +1,8 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
+import * as Theme from '../src/styles'; 
 
-export default function Input({ label, value, onChangeText, error }) {
+export default function UserInfoInput({ label, value, onChangeText, error }) {
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.inputLabel}>{label}</Text>
@@ -27,22 +28,22 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
     padding: 10,
-    fontSize: 24,
+    fontSize: Theme.fontSizes.large,
     fontWeight: 'bold',
-    borderColor: "darkblue",
+    borderColor: Theme.colors.primary,
     textAlign: "center",
     margin: 5,
   },
 
   inputLabel: {
-    color: "darkblue",
-    fontSize: 18,
+    color: Theme.colors.primary,
+    fontSize: Theme.fontSizes.medium,
     marginBottom: 10,
     fontWeight: 'bold',
   },
 
   errorMessage: {
     color: "dimgrey",
-    fontSize: 18,
+    fontSize: Theme.fontSizes.medium,
   },
 });

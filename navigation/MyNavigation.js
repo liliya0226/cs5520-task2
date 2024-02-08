@@ -5,8 +5,10 @@ import AddActivity from "../screens/AddActivity";
 import MyButton from "../components/MyButton";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import { Button } from "react-native";
 
+import { TouchableOpacity } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import * as Theme from '../src/styles'; 
 const Stack = createStackNavigator();
 const MyTheme = {
   ...DefaultTheme,
@@ -26,8 +28,8 @@ const MyNavigation = () => {
           headerStyle: {
             backgroundColor: MyTheme.colors.card,
           },
-          headerTintColor: "rgb(225, 225, 255)",
-
+          headerTintColor: Theme.colors.light,
+          headerTitleAlign: "center",
           headerTitleStyle: {
             fontWeight: "bold",
           },
@@ -37,8 +39,9 @@ const MyNavigation = () => {
         <Stack.Screen
           name="MyTabs"
           component={MyTabs}
-          options={({ navigation,route }) => ({
+          options={({ navigation, route }) => ({
             headerLeft: () => null,
+            headerTitleAlign: "center",
             headerTitle: getHeaderTitle(route),
             headerRight: () => (
               <MyButton
@@ -53,13 +56,14 @@ const MyNavigation = () => {
         <Stack.Screen
           name="Add An Activity"
           component={AddActivity}
-          options={({navigation}) =>({
+          options={({ navigation }) => ({
             headerLeft: () => (
-              <Button
+              <TouchableOpacity
                 onPress={() => navigation.goBack()}
-                title="<"
-                color="white"
-              />
+                style={{ paddingHorizontal: 10 }}
+              >
+                <AntDesign name="left" size={24} color={Theme.colors.secondary}/>
+              </TouchableOpacity>
             ),
           })}
         />
@@ -68,16 +72,15 @@ const MyNavigation = () => {
   );
 };
 const getHeaderTitle = (route) => {
-
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'MyTabs';
+  const routeName = getFocusedRouteNameFromRoute(route) ?? "MyTabs";
 
   switch (routeName) {
-    case 'All Activities':
-      return 'All Activities';
-    case 'Special Activities':
-      return 'Special Activities';
+    case "All Activities":
+      return "All Activities";
+    case "Special Activities":
+      return "Special Activities";
     default:
-      return 'All Activities';
+      return "All Activities";
   }
 };
 export default MyNavigation;
