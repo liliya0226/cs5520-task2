@@ -1,16 +1,27 @@
-
 export const colors = {
   primary: "darkblue",
   secondary: "#FFFFFF",
   light: "rgb(204, 229, 255)",
- 
+  tabBarActiveTintColor: "gold",
+  tabBarInactiveTintColor: "gray",
+  errorColor: "dimgrey",
+  transparentBackground: "transparent",
+  cardColor: "#00008B",
+  addButtonColor:"#FFD700",
+  cancelButtonInitial: "purple",
+  cancelButtonPressed: "white",
+  saveButtonInitial: "blue",
+  saveButtonPressed: "white",
 };
 
 // Common padding and margins
 export const spacing = {
-  small: 8,
-  medium: 16,
-  large: 24,
+  superSmall: "1%",
+  mediumSmall:"2%",
+  extraSmall: "3%",
+  small: "5%",
+  medium: "10%",
+  large: "20%",
 };
 
 // Font sizes
@@ -20,18 +31,17 @@ export const fontSizes = {
   title: 24,
 };
 
-// Example of a common button style
-export const buttonStyles = {
-  button: {
-    paddingHorizontal: spacing.medium,
-    paddingVertical: spacing.small,
-    borderRadius: 4,
-  },
-  buttonText: {
-    fontSize: fontSizes.medium,
-    color: colors.light,
-    textAlign: 'center',
-  },
+export const padding = {
+  extraSmall: 5,
+  small: 10,
+  medium: 16,
+  large: 20,
+  mediumLarge:"6%",
+  extraLarge: "20%",
 };
 
-// You can also export default styles if there are common styles you use everywhere
+export const borderRadius = {
+  small: 1,
+  medium: 5,
+  large:10,
+};

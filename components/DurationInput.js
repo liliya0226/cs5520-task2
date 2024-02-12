@@ -1,46 +1,49 @@
-import { View, Text,TextInput,StyleSheet } from 'react-native'
-import React from 'react'
-import * as Theme from '../src/styles'; 
-const DurationInput = ({value, onValueChange,label}) => {
+import { View, Text, TextInput, StyleSheet } from "react-native";
+import React from "react";
+import * as Theme from "../src/styles";
+// DurationInput component for accepting duration input from the user
+const DurationInput = ({ value, onChangeText, label }) => {
+  // Convert the value to string to ensure the TextInput component works correctly
   const stringValue = value.toString();
 
-
   return (
+    // Container view for the label and text input
     <View style={styles.inputContainer}>
+      {/* Text component to display the input field label */}
       <Text style={styles.inputLabel}>{label}</Text>
+      {/* TextInput for user to enter duration */}
       <TextInput
-        style={styles.input}
-        value={stringValue}
-        onChangeText={ onValueChange}
+        style={styles.input} // Style for the text input
+        value={stringValue} // Display the duration value as a string
+        onChangeText={onChangeText} // Function to call when text changes
       />
-
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
-  inputContainer:{
-      width: '100%', // 保持100%以充满父容器
-      marginBottom: 20, // 减小间距以适应更紧凑的布局
+  inputContainer: {
+    width: "100%", 
+    marginBottom: Theme.spacing.small, 
   },
-  input:{
-      width: '100%', // 如果你希望输入框宽度充满容器，可以设置为100%
-      borderRadius: 5,
-      padding: 10,
-      fontSize:  Theme.fontSizes.medium,
-      borderWidth: 2, // 添加边框宽度以显示边框
-      borderColor: Theme.colors.primary,
-      textAlign: 'left',
-      color:Theme.colors.primary,
-      marginVertical: 5, // 垂直间距，替代单独的margin
+  input: {
+    width: "100%",
+    borderRadius: Theme.borderRadius.medium,
+    padding: Theme.padding.small,
+    fontSize: Theme.fontSizes.medium,
+    borderWidth: 2, 
+    borderColor: Theme.colors.primary,
+    textAlign: "left",
+    color: Theme.colors.primary,
+
   },
-  inputLabel:{
-      color: Theme.colors.primary,
-      fontSize:  Theme.fontSizes.small,
-      marginBottom: 10, 
-      fontWeight: 'bold',
+  inputLabel: {
+    color: Theme.colors.primary,
+    fontSize: Theme.fontSizes.small,
+    marginBottom: Theme.spacing.small,
+    fontWeight: "bold",
+ 
   },
 });
 
-
-export default DurationInput
+export default DurationInput;

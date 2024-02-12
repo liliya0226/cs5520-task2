@@ -1,163 +1,145 @@
+// Import necessary libraries and components
 import React, { useState } from "react";
-
-import { Text,View, StyleSheet } from "react-native";
-
-import MyDropdownPicker from "../components/MyDropdownPicker";
+import { View, StyleSheet, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { useActivitiesList } from "../contexts/ActivitiesContext";
+
+// Import custom components and theme
+import MyDropdownPicker from "../components/MyDropdownPicker";
 import MyButton from "../components/MyButton";
 import DurationInput from "../components/DurationInput";
-import { useNavigation } from "@react-navigation/native";
 import { MyDatepicker } from "../components/MyDatepicker";
-import { Alert } from "react-native";
-import { useActivitiesList } from "../contexts/ActivitiesContext";
 import * as Theme from "../src/styles";
-const AddActivity = () => {
-  const { addActivity } = useActivitiesList();
-  const navigation = useNavigation();
-  const [category, setCategory] = useState(null);
 
+// Component to add a new activity
+const AddActivity = () => {
+  // Hook to access the addActivity function from context
+  const { addActivity } = useActivitiesList();
+  // Hook to navigate between screens
+  const navigation = useNavigation();
+
+  // State for form inputs
+  const [category, setCategory] = useState(null);
   const [duration, setDuration] = useState("");
   const [date, setDate] = useState("");
-  const handleCategoryChange = (newCategory) => {
-    setCategory(newCategory);
-  };
-  const handleDurationChange = (newDuration) => {
-    setDuration(newDuration);
-  };
-  const handleDateChange = (newDate) => {
-    setDate(newDate);
-  };
-  const handleCancel = () => {
-    navigation.goBack();
-  };
 
+  // Handlers for form inputs
+  const handleCategoryChange = (newCategory) => setCategory(newCategory);
+  const handleDurationChange = (newDuration) => setDuration(newDuration);
+  const handleDateChange = (newDate) => setDate(newDate);
+
+  // Handler to cancel and go back to the previous screen
+  const handleCancel = () => navigation.goBack();
+
+  // Validates form inputs
   const validateUserEntries = () => {
-    let valid = true;
-
-    // Validate category is not null or empty
-    if (!category || category.trim() === "") {
-      console.log("Category must be selected.");
-      valid = false;
+    if (!category || category.trim() === "") {// Check for non-empty category
+      Alert.alert("Invalid Input", "Category must be selected.");
+      return false;
     }
-
-    // Validate duration is a positive number and not empty
-    // This regex checks if the duration is a number which may include decimals
-    if (isNaN(duration) || parseFloat(duration) <= 0) {
-      console.log("Duration must be a positive number.");
-      valid = false;
+    if (isNaN(duration) || parseFloat(duration) <= 0) {// Check for valid number in duration
+      Alert.alert("Invalid Input", "Duration must be a positive number.");
+      return false;
     }
-
-    // Validate date is not empty
-    if (date.trim() === "") {
-      console.log("Date must be selected.");
-      valid = false;
+    if (date.trim() === "") {// Check for non-empty date
+      Alert.alert("Invalid Input", "Date must be selected.");
+      return false;
     }
-
-    return valid;
+    return true;
   };
 
+  // Handler to save the activity
   const handleSave = () => {
     if (validateUserEntries()) {
-      // Make sure to call the function with ()
-
-      addActivity({
-        category,
-        duration: parseInt(duration, 10), // Ensure duration is an integer
-        date,
-      });
-
-      setCategory("");
+      addActivity({ category, duration: parseInt(duration, 10), date });
+      setCategory(""); // Reset form
       setDate("");
       setDuration("");
-
-      navigation.goBack(); // If validation passes, navigate back
-    } else {
-      // If validation fails, show an alert using Alert.alert
-      Alert.alert(
-        "Invalid Input", // Title of the alert
-        "Please check your input values.", // Message of the alert
-        [
-          { text: "OK", onPress: () => console.log("OK Pressed") }, // Button
-        ]
-      );
+      navigation.goBack(); // Navigate back
     }
   };
 
+  // Component UI
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.dropdownContainer}>
-        <MyDropdownPicker
-          label="Activities *"
-          onValueChange={handleCategoryChange}
-        ></MyDropdownPicker>
-      </View>
-      <View style={styles.inputContainer}>
-        <DurationInput
-          label="Duration (min)*"
-          value={duration}
-          onValueChange={handleDurationChange}
-        ></DurationInput>
-      </View>
-      <View style={styles.datePickerContainer}>
-        <MyDatepicker
-          label="Date *"
-          onValueChange={handleDateChange}
-        ></MyDatepicker>
-      </View>
-      <View style={styles.buttonsContainer}>
-        <MyButton
-          title="Cancel"
-          onPress={handleCancel}
-          initialTextColor="purple"
-          pressedTextColor="white"
-        ></MyButton>
-
-        <MyButton
-          title="Save"
-          onPress={handleSave}
-          initialTextColor="blue"
-          pressedTextColor="white"
-        ></MyButton>
-      </View>
-      {/* <Text>Hi</Text> */}
-    </SafeAreaView>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={"height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+    >
+      <SafeAreaView style={styles.container}>
+        <View style={styles.dropdownContainer}>
+          <MyDropdownPicker
+            label="Activities *"
+            onValueChange={handleCategoryChange}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <DurationInput
+            label="Duration (min)*"
+            value={duration}
+            onChangeText={handleDurationChange}
+          />
+        </View>
+        <View style={styles.datePickerContainer}>
+          <MyDatepicker
+            label="Date *"
+            onValueChange={handleDateChange}
+          />
+        </View>
+        <View style={styles.buttonsContainer}>
+          <MyButton
+            title="Cancel"
+            onPress={handleCancel}
+            initialTextColor={Theme.colors.cancelButtonInitial}
+            pressedTextColor={Theme.colors.cancelButtonPressed}
+          />
+          <MyButton
+            title="Save"
+            onPress={handleSave}
+            initialTextColor={Theme.colors.saveButtonInitial}
+            pressedTextColor={Theme.colors.saveButtonPressed}
+          />
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
+
+// StyleSheet for styling the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "center",
-    padding: 20,
+    paddingLeft: Theme.padding.large,
+    paddingRight: Theme.padding.large,
   },
   inputContainer: {
     width: "100%",
     justifyContent: "flex-start",
-    flex: 1,
+    flex: 1.2,
+    paddingTop: Theme.padding.extraLarge,
   },
   dropdownContainer: {
     width: "100%",
-
     justifyContent: "flex-start",
-    zIndex: 5,
-    flex: 2,
+    zIndex: 3,
+    flex: 1,
   },
   buttonsContainer: {
     flexDirection: "row",
     width: "100%",
-    justifyContent: "space-around",
-    flex: 2,
+    justifyContent: "center",
+    flex: 1.2,
     zIndex: 1,
-    position:'absoulte',
   },
   datePickerContainer: {
     width: "100%",
-    zIndex: 4,
-    flex: 6,
-    marginTop: "3%",
-    // position:'absoulte',
-    // backgroundColor: "red",
+    zIndex: 2,
+    flex: 5,
+    marginTop: Theme.spacing.small,
   },
 });
 
-export default AddActivity;
+export default AddActivity; // Export the AddActivity component
