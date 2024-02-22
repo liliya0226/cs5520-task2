@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.primary,
     padding: Theme.padding.small,
     borderRadius: Theme.borderRadius.large,
+    marginTop: Theme.spacing.extraSmall,
     marginLeft: Theme.spacing.extraSmall,
     marginRight: Theme.spacing.extraSmall,
     marginBottom: Theme.spacing.extraSmall,
@@ -43,6 +44,8 @@ const styles = StyleSheet.create({
   categoryContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center", 
+ 
     flex: 1.4,
   },
   categoryText: {
@@ -50,6 +53,8 @@ const styles = StyleSheet.create({
     flex: 1,
     fontWeight: "bold",
     fontSize: Theme.fontSizes.small,
+    padding: Theme.padding.extraSmall,
+
   },
   warningIcon: {
     width: 30,

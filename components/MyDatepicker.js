@@ -39,9 +39,9 @@ const formatDateToCustomString = (dateString) => {
 
 // Datepicker component that allows a user to pick a date
 export const MyDatepicker = ({ label, onValueChange }) => {
-  const [date, setDate] = useState(new Date(1598051730000)); // State for the selected date
+  const [date, setDate] = useState(null); // State for the selected date
   const [show, setShow] = useState(false); // State to show/hide the date picker
-  const [dateText, setDateText] = useState(""); // State to hold the formatted date string
+  const [dateText, setDateText] = useState(''); // State to hold the formatted date string
 
   // Handler for date change
   const onChange = (event, selectedDate) => {
@@ -53,10 +53,27 @@ export const MyDatepicker = ({ label, onValueChange }) => {
     onValueChange(formattedString); // Propagate the change up with the formatted date string
   };
 
-  // Function to display the date picker
-  const showDatepicker = () => {
+  const openDatePicker = () => {
     setShow(true);
+
   };
+
+// Handle function for clicking the text input field
+const handleTextInputClick = () => {
+  if (show && date) { // If the date picker is already open and a date is selected, it's equivalent to selecting the current date
+    setShow(false); // Close the date picker
+    const formattedString = formatDateToCustomString(date); // Format the current date string
+    setDateText(formattedString); // Update the displayed date text
+    onValueChange(formattedString); // Propagate the selected date through the onValueChange callback
+  } else { // If the date picker is not open or no date is selected yet, open the date picker
+    const currentDate = new Date(); // Get the current date
+    setDate(currentDate); // Set the current date
+    const formattedString = formatDateToCustomString(currentDate); // Format the current date string
+    setDateText(formattedString); // Update the displayed date text
+    openDatePicker(); // Open the date picker
+  }
+};
+
 
   // Component layout
   return (
@@ -64,7 +81,7 @@ export const MyDatepicker = ({ label, onValueChange }) => {
       <View style={styles.wrapper}>
         <Text style={styles.inputLabel}>{label}</Text> 
       
-        <TouchableOpacity onPress={showDatepicker} style={styles.dateInputTouchable}>
+        <TouchableOpacity onPress={handleTextInputClick} style={styles.dateInputTouchable}>
           <TextInput
             style={styles.dateInput} // Input style
             value={dateText} // Display the formatted date
@@ -76,7 +93,7 @@ export const MyDatepicker = ({ label, onValueChange }) => {
         {show && (
           <DateTimePicker
             testID="dateTimePicker"
-            value={date} // Current date value
+            value={date} 
             mode="date" // Picker mode
             is24Hour={true} // 24 hours format
             display={Platform.OS === "ios" ? "inline" : "default"} // Display mode

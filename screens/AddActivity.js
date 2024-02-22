@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     width: "100%",
     zIndex: 2,
     flex: 5,
-    marginTop: Theme.spacing.small,
+  
   },
 });
 
