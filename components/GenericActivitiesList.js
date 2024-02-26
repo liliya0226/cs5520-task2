@@ -1,18 +1,34 @@
 import React from "react";
 import { FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ActivityBlock from "../components/ActivityBlock"; 
-import { useActivitiesList } from "../contexts/ActivitiesContext"; 
-
-
+import ActivityBlock from "../components/ActivityBlock";
+import { collection, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { database } from "../firebases-files/firebases-setups";
+import { useNavigation } from "@react-navigation/native";
 const GenericActivitiesList = ({ isSpecial }) => {
   // Retrieve the list of all activities from the activities context
-  const { allActivitiesList } = useActivitiesList();
-
+  const navigation = useNavigation();
+  useEffect(() => {
+    onSnapshot(collection(database, "Activity"), (querySnapshot) => {
+      let newArray = [];
+      querySnapshot.forEach((doc) => {
+        newArray.push({ ...doc.data(), id: doc.id });
+      });
+      setAllActivitiesList(newArray);
+    });
+  }, []);
+  const [allActivitiesList, setAllActivitiesList] = useState([]);
   // Filter activities if it's special
-  const filteredActivities = isSpecial ? allActivitiesList.filter(item => item.duration > 60) : allActivitiesList;
-
+  const filteredActivities = isSpecial
+    ? allActivitiesList.filter((item) => item.special === true)
+    : allActivitiesList;
   // Component rendering
+  const handleActicityPress = (item) => {
+
+    navigation.navigate("Edit", { data: item });
+  };
+
   return (
     <SafeAreaView>
       <FlatList
@@ -21,9 +37,12 @@ const GenericActivitiesList = ({ isSpecial }) => {
         renderItem={({ item }) => (
           // Render each activity using the ActivityBlock component
           <ActivityBlock
+            item={item}
             category={item.category} // Pass category of the activity
             duration={item.duration} // Pass duration of the activity
             date={item.date} // Pass date of the activity
+            isSpecial={item.special}
+            onPress={() => handleActicityPress(item)}
           />
         )}
       />

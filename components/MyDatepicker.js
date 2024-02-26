@@ -38,10 +38,10 @@ const formatDateToCustomString = (dateString) => {
 };
 
 // Datepicker component that allows a user to pick a date
-export const MyDatepicker = ({ label, onValueChange }) => {
-  const [date, setDate] = useState(null); // State for the selected date
+export const MyDatepicker = ({ initialValue, label, onValueChange }) => {
+  const [date, setDate] = useState(initialValue); // State for the selected date
   const [show, setShow] = useState(false); // State to show/hide the date picker
-  const [dateText, setDateText] = useState(''); // State to hold the formatted date string
+  const [dateText, setDateText] = useState(initialValue); // State to hold the formatted date string
 
   // Handler for date change
   const onChange = (event, selectedDate) => {
@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
+    marginTop:Theme.spacing.small,
   },
   wrapper: {
     width: "100%",
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.light,
   },
   dateInputTouchable: {
-    marginVertical: Theme.spacing.small,
+    marginVertical: Theme.spacing.mediumSmall,
     borderColor: Theme.colors.primary,
     borderRadius: Theme.borderRadius.medium,
   },

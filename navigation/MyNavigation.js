@@ -5,9 +5,10 @@ import AddActivity from "../screens/AddActivity";
 import MyButton from "../components/MyButton";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native";
+
 import { AntDesign } from "@expo/vector-icons";
 import * as Theme from "../src/styles";
+
 
 // Create a stack navigator instance
 const Stack = createStackNavigator();
@@ -34,30 +35,27 @@ const MyNavigation = () => {
             backgroundColor: MyTheme.colors.card, // Customize the header background color
           },
           headerTintColor: Theme.colors.light, // Customize the header text and icon color
-          headerTitleAlign: "center", // Align the header title to the center
+
           headerTitleStyle: {
             fontWeight: "bold", // Make the header title bold
           },
         }}
       >
         {/* Stack screen for the Start screen */}
-        <Stack.Screen name="Start" component={Start} />
+        {/* <Stack.Screen name="Start" component={Start} /> */}
         {/* Stack screen for the MyTabs navigator */}
         <Stack.Screen
           name="MyTabs"
           component={MyTabs}
           options={({ navigation, route }) => ({
             headerLeft: () => null, // Hide the back button
-            headerTitleAlign: "center", // Center the title
+
             headerTitle: getHeaderTitle(route), // Dynamically set the header title
             // Custom button in the header right using the MyButton component
             headerRight: () => (
-              <MyButton
-                onPress={() => navigation.navigate("Add An Activity")}
-                title="Add"
-                initialTextColor={Theme.colors.addButtonColor}
-                pressedTextColor={Theme.colors.transparentBackground}
-              />
+              <MyButton onPress={() => navigation.navigate("Add An Activity")}>
+                <AntDesign name="plus" size={24} color="white" />
+              </MyButton>
             ),
           })}
         />
@@ -68,7 +66,7 @@ const MyNavigation = () => {
           options={({ navigation }) => ({
             headerLeft: () => (
               // Custom back button using TouchableOpacity and AntDesign icon
-              <TouchableOpacity
+              <MyButton
                 onPress={() => navigation.goBack()}
                 style={{ paddingHorizontal: Theme.padding.extraSmall }}
               >
@@ -77,10 +75,28 @@ const MyNavigation = () => {
                   size={Theme.fontSizes.title}
                   color={Theme.colors.secondary}
                 />
-              </TouchableOpacity>
+              </MyButton>
             ),
           })}
         />
+        <Stack.Screen
+          name="Edit"
+          component={AddActivity}
+          // component={EditActivity}
+          options={({ navigation }) => ({ headerLeft: () =>(
+            // Custom back button using TouchableOpacity and AntDesign icon
+            <MyButton
+              onPress={() => navigation.goBack()}
+              style={{ paddingHorizontal: Theme.padding.extraSmall }}
+            >
+              <AntDesign
+                name="left"
+                size={Theme.fontSizes.title}
+                color={Theme.colors.secondary}
+              />
+            </MyButton>
+          ) })}
+        ></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -100,4 +116,4 @@ const getHeaderTitle = (route) => {
   }
 };
 
-export default MyNavigation; 
+export default MyNavigation;
