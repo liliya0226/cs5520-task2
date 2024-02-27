@@ -1,57 +1,67 @@
-import React, { useState } from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import React from "react";
+import { Text, Pressable, Platform, StyleSheet } from "react-native";
 import * as Theme from "../src/styles";
-
-// Custom button component that changes text color based on press state
-const MyButton = ({ title, onPress, initialTextColor, pressedTextColor }) => {
-  // State to track if the button is pressed
-  const [isPressed, setIsPressed] = useState(false);
-
-  // Function to handle the press in action
-  const handlePressIn = () => {
-    setIsPressed(true); // Set isPressed to true when the button is pressed
-  };
-
-  // Function to handle the press out action
-  const handlePressOut = () => {
-    setIsPressed(false); // Reset isPressed to false when the button is released
-  };
-
-  // Render the button
+const MyButton = ({
+  title,
+  onPress,
+  customStyle,
+  initialColor,
+  disabled,
+  children,
+}) => {
   return (
-    // TouchableOpacity for the button to allow for press events
-    <TouchableOpacity
-      onPress={onPress} // Propagate the onPress event to the parent component
-      onPressIn={handlePressIn} // Handle the press in action
-      onPressOut={handlePressOut} // Handle the press out action
-      style={styles.button} // Apply styles to the button
+    <Pressable
+      onPress={onPress}
+      android_ripple={
+        disabled ? undefined : { color: Theme.colors.rippleColor }
+      } // Ripple effect for Android when the button is pressed, only if not disabled
+      style={({ pressed }) => [
+        styles.defaultStyle,
+        customStyle,
+        disabled // If the button is disabled, change the background color to the ripple color
+          ? { backgroundColor: Theme.colors.rippleColor }
+          : { backgroundColor: initialColor },
+        pressed && styles.pressed, // Apply additional styles when the button is pressed
+        {
+          opacity: pressed && !disabled && Platform.OS === "ios" ? 0.7 : 1, // Reduce opacity slightly when pressed on iOS, if not disabled
+        },
+      ]}
+      disabled={disabled} // Whether the button is disabled or not
     >
-      {/* Text inside the button */}
-      <Text
-        style={[
-          styles.buttonText,
-          {
-            color: isPressed
-              ? pressedTextColor // Use pressed text color when the button is pressed
-              : initialTextColor, // Use initial text color otherwise
-          },
-        ]}
-      >
-        {title}
-      </Text>
-    </TouchableOpacity>
+      {title &&
+        !children && ( // Render the title if provided and no children are provided
+          <Text style={styles.text}>{title}</Text>
+        )}
+      {children}
+    </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    backgroundColor: Theme.colors.transparentBackground,
-    padding: Theme.padding.small,
-    borderRadius: Theme.borderRadius.medium,
+  defaultStyle: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    margin: "5%",
+    backgroundColor: "transparent",
+
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+      },
+    }),
   },
-  buttonText: {
-    fontSize: Theme.fontSizes.medium,
-    textAlign: "center",
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "#FFFFFF",
   },
 });
 

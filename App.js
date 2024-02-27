@@ -2,15 +2,10 @@
 
 import React from "react";
 import MyNavigation from "./navigation/MyNavigation"; // Handles app navigation.
-import { ActivityProvider } from "./contexts/ActivitiesContext"; // Provides activities context.
 
-// App component with context provider and navigation.
+// App component with navigation.
 const App = () => {
-  return (
-    <ActivityProvider>
-      <MyNavigation />
-    </ActivityProvider>
-  );
+  return <MyNavigation />;
 };
 
 export default App; // Export App component.

@@ -1,30 +1,38 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, Pressable, StyleSheet, Image } from "react-native";
 import * as Theme from "../src/styles";
 
 // Component to display information about an activity
-const ActivityBlock = ({ category, duration, date }) => {
+const ActivityBlock = ({ category, duration, date, isSpecial, onPress }) => {
   return (
-    // Container for the activity block
-    <View style={styles.blockContainer}>
-      {/* Container for the category */}
-      <View style={styles.categoryContainer}>
-        <Text style={styles.categoryText}>{category}</Text>
-      </View>
-      {/* Conditionally display a warning icon for activities longer than 60 minutes */}
-      {duration > 60 ? (
-        <Image
-          style={styles.warningIcon}
-          source={require("../assets/alert.png")} // Warning icon image
-        />
-      ) : (
-        // Placeholder for layout consistency when no warning is necessary
-        <View style={styles.warningIcon} />
-      )}
-      {/* Display the date of the activity */}
-      <Text style={styles.dateText}>{date}</Text>
-      {/* Display the duration of the activity */}
-      <Text style={styles.durationText}>{duration} min</Text>
+    <View>
+      <Pressable
+        onPress={onPress}
+        android_ripple={{ color: Theme.colors.rippleColor }}
+        style={({ pressed }) => {
+          // Dynamically adjust style based on press state
+          return [styles.blockContainer, pressed && styles.pressed];
+        }}
+      >
+        {/* Container for the category */}
+        <View style={styles.categoryContainer}>
+          <Text style={styles.categoryText}>{category}</Text>
+        </View>
+        {/* Conditionally display a warning icon for activities which is special */}
+        {isSpecial ? (
+          <Image
+            style={styles.warningIcon}
+            source={require("../assets/alert.png")} // Warning icon image
+          />
+        ) : (
+          // Placeholder for layout consistency when no warning is necessary
+          <View style={styles.warningIcon} />
+        )}
+        {/* Display the date of the activity */}
+        <Text style={styles.dateText}>{date}</Text>
+        {/* Display the duration of the activity */}
+        <Text style={styles.durationText}>{duration} min</Text>
+      </Pressable>
     </View>
   );
 };
@@ -44,8 +52,8 @@ const styles = StyleSheet.create({
   categoryContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center", 
- 
+    justifyContent: "center",
+
     flex: 1.4,
   },
   categoryText: {
@@ -54,7 +62,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: Theme.fontSizes.small,
     padding: Theme.padding.extraSmall,
-
   },
   warningIcon: {
     width: 30,
@@ -70,7 +77,7 @@ const styles = StyleSheet.create({
     paddingVertical: Theme.padding.extraSmall,
     paddingHorizontal: Theme.padding.extraSmall,
     marginRight: Theme.spacing.superSmall,
-    borderRadius: Theme.borderRadius.medium,
+
     fontWeight: "bold",
     flex: 2,
     textAlign: "center",
@@ -81,10 +88,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Theme.colors.secondary,
     paddingVertical: Theme.padding.extraSmall,
-    borderRadius: Theme.borderRadius.medium,
+
     flex: 1.2,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  pressed: {
+    opacity: 0.5,
   },
 });
 

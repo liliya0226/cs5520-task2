@@ -38,10 +38,10 @@ const formatDateToCustomString = (dateString) => {
 };
 
 // Datepicker component that allows a user to pick a date
-export const MyDatepicker = ({ label, onValueChange }) => {
-  const [date, setDate] = useState(null); // State for the selected date
+export const MyDatepicker = ({ initialValue, label, onValueChange }) => {
+  const [date, setDate] = useState(initialValue); // State for the selected date
   const [show, setShow] = useState(false); // State to show/hide the date picker
-  const [dateText, setDateText] = useState(''); // State to hold the formatted date string
+  const [dateText, setDateText] = useState(initialValue); // State to hold the formatted date string
 
   // Handler for date change
   const onChange = (event, selectedDate) => {
@@ -55,33 +55,45 @@ export const MyDatepicker = ({ label, onValueChange }) => {
 
   const openDatePicker = () => {
     setShow(true);
-
   };
 
-// Handle function for clicking the text input field
-const handleTextInputClick = () => {
-  if (show && date) { // If the date picker is already open and a date is selected, it's equivalent to selecting the current date
-    setShow(false); // Close the date picker
-    const formattedString = formatDateToCustomString(date); // Format the current date string
-    setDateText(formattedString); // Update the displayed date text
-    onValueChange(formattedString); // Propagate the selected date through the onValueChange callback
-  } else { // If the date picker is not open or no date is selected yet, open the date picker
-    const currentDate = new Date(); // Get the current date
-    setDate(currentDate); // Set the current date
-    const formattedString = formatDateToCustomString(currentDate); // Format the current date string
-    setDateText(formattedString); // Update the displayed date text
-    openDatePicker(); // Open the date picker
-  }
-};
+  // Handle function for clicking the text input field
+  const handleTextInputClick = () => {
+    if (show && date) {
+      // If the date picker is already open and a date is selected, it's equivalent to selecting the current date
+      setShow(false); // Close the date picker
+      const formattedString = formatDateToCustomString(date); // Format the current date string
+      setDateText(formattedString); // Update the displayed date text
+      onValueChange(formattedString); // Propagate the selected date through the onValueChange callback
+    } else {
+      // If the date picker is not open or no date is selected yet, open the date picker
+      if (initialValue !== null) {
+        // Check if initial value is not null and date is not set yet
 
+        const initialDate = new Date(initialValue); // Convert initial value to Date object
+        setDate(initialDate); // Set the initial date
+        const formattedString = formatDateToCustomString(initialDate); // Format the initial date string
+        setDateText(formattedString); // Update the displayed date text with initial value
+      } else {
+        const currentDate = new Date(); // Get the current date
+        setDate(currentDate); // Set the current date
+        const formattedString = formatDateToCustomString(currentDate); // Format the current date string
+        setDateText(formattedString); // Update the displayed date text
+      }
+      openDatePicker(); // Open the date picker
+    }
+  };
 
   // Component layout
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
-        <Text style={styles.inputLabel}>{label}</Text> 
-      
-        <TouchableOpacity onPress={handleTextInputClick} style={styles.dateInputTouchable}>
+        <Text style={styles.inputLabel}>{label}</Text>
+
+        <TouchableOpacity
+          onPress={handleTextInputClick}
+          style={styles.dateInputTouchable}
+        >
           <TextInput
             style={styles.dateInput} // Input style
             value={dateText} // Display the formatted date
@@ -93,7 +105,7 @@ const handleTextInputClick = () => {
         {show && (
           <DateTimePicker
             testID="dateTimePicker"
-            value={date} 
+            value={date}
             mode="date" // Picker mode
             is24Hour={true} // 24 hours format
             display={Platform.OS === "ios" ? "inline" : "default"} // Display mode
@@ -110,6 +122,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
+    marginTop: Theme.spacing.small,
   },
   wrapper: {
     width: "100%",
@@ -119,7 +132,7 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.light,
   },
   dateInputTouchable: {
-    marginVertical: Theme.spacing.small,
+    marginVertical: Theme.spacing.mediumSmall,
     borderColor: Theme.colors.primary,
     borderRadius: Theme.borderRadius.medium,
   },

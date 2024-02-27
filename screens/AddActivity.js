@@ -1,65 +1,135 @@
 // Import necessary libraries and components
 import React, { useState } from "react";
-import { View, StyleSheet, Alert, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { useActivitiesList } from "../contexts/ActivitiesContext";
-
+import { useRoute } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
+import { useEffect } from "react";
+import Checkbox from "expo-checkbox";
 // Import custom components and theme
 import MyDropdownPicker from "../components/MyDropdownPicker";
 import MyButton from "../components/MyButton";
 import DurationInput from "../components/DurationInput";
 import { MyDatepicker } from "../components/MyDatepicker";
 import * as Theme from "../src/styles";
-
+import { writeToDB } from "../firebases-files/firestoreHelper.js";
+import { updateToDB } from "../firebases-files/firestoreHelper.js";
+import { deleteToDB } from "../firebases-files/firestoreHelper.js";
 // Component to add a new activity
 const AddActivity = () => {
-  // Hook to access the addActivity function from context
-  const { addActivity } = useActivitiesList();
   // Hook to navigate between screens
   const navigation = useNavigation();
+  // Hook to access route parameters
+  const route = useRoute();
+  // Extract initial data passed through route, if any
+  const initialData = route.params?.data;
 
-  // State for form inputs
-  const [category, setCategory] = useState(null);
-  const [duration, setDuration] = useState("");
-  const [date, setDate] = useState("");
+  // State hooks for form inputs, initialized with initialData if available
+  const [category, setCategory] = useState(initialData?.category || null);
+  const [duration, setDuration] = useState(initialData?.duration || "");
+  const [date, setDate] = useState(initialData?.date || "");
+  const [isChecked, setChecked] = useState(false); // State for checkbox
 
-  // Handlers for form inputs
+  // Handlers to update state based on user input
   const handleCategoryChange = (newCategory) => setCategory(newCategory);
   const handleDurationChange = (newDuration) => setDuration(newDuration);
   const handleDateChange = (newDate) => setDate(newDate);
 
-  // Handler to cancel and go back to the previous screen
+  // Handler to navigate back to the previous screen
   const handleCancel = () => navigation.goBack();
 
-  // Validates form inputs
+  // Handler for deleting an activity
+  const handleDelete = (id) => {
+    // Show confirmation dialog before deletion
+    Alert.alert("Delete", "Are you sure you want to delete this item?", [
+      { text: "No", onPress: () => {}, style: "cancel" }, // No action, just close dialog
+      {
+        text: "Yes",
+        onPress: () => {
+          deleteToDB(id); // Perform delete operation
+          navigation.goBack(); // Navigate back after deletion
+        },
+      },
+    ]);
+  };
+
+  // Effect hook to set the navigation options dynamically
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        // Render delete button in header if there's initialData
+        <MyButton onPress={() => handleDelete(initialData.id)}>
+          <AntDesign name="delete" size={24} color={Theme.colors.icon}/>
+        </MyButton>
+      ),
+    });
+  }, [initialData, navigation]);
+
+  // Function to validate user inputs
   const validateUserEntries = () => {
-    if (!category || category.trim() === "") {// Check for non-empty category
+    // Validation checks for category, duration, and date
+    if (!category || category.trim() === "") {
       Alert.alert("Invalid Input", "Category must be selected.");
       return false;
     }
-    if (isNaN(duration) || parseFloat(duration) <= 0) {// Check for valid number in duration
+    if (isNaN(duration) || parseFloat(duration) <= 0) {
       Alert.alert("Invalid Input", "Duration must be a positive number.");
       return false;
     }
-    if (date.trim() === "") {// Check for non-empty date
+    if (date.trim() === "") {
       Alert.alert("Invalid Input", "Date must be selected.");
       return false;
     }
-    return true;
+    return true; // Return true if all validations pass
   };
 
-  // Handler to save the activity
+  // Handler for saving activity data
   const handleSave = () => {
-    if (validateUserEntries()) {
-      addActivity({ category, duration: parseInt(duration, 10), date });
-      setCategory(""); // Reset form
-      setDate("");
-      setDuration("");
-      navigation.goBack(); // Navigate back
+    if (validateUserEntries()) { // Check if user entries are valid
+      if (initialData) {
+        // If updating existing activity, show confirmation dialog
+        Alert.alert("Important", "Are you sure you want to save these changes?", [
+          { text: "Cancel", style: "cancel" }, // No action, just close dialog
+          {
+            text: "Yes",
+            onPress: () => {
+              // Prepare updated activity data
+              const updatedActivity = {
+                category: category,
+                duration: parseInt(duration, 10),
+                date: date,
+                special: isChecked ? false : parseInt(duration, 10) > 60,
+              };
+              updateToDB(initialData.id, updatedActivity); // Perform update operation
+              navigation.goBack(); // Navigate back after update
+            },
+          },
+        ]);
+      } else {
+        // If adding new activity, prepare new activity data
+        const newActivity = {
+          category: category,
+          duration: parseInt(duration, 10),
+          date: date,
+          special: parseInt(duration, 10) > 60,
+        };
+        writeToDB(newActivity); // Perform add operation
+        // Reset form inputs
+        setCategory(""); 
+        setDate("");
+        setDuration("");
+        navigation.goBack(); // Navigate back after adding new activity
+      }
     }
   };
-
   // Component UI
   return (
     <KeyboardAvoidingView
@@ -72,6 +142,7 @@ const AddActivity = () => {
           <MyDropdownPicker
             label="Activities *"
             onValueChange={handleCategoryChange}
+            initialValue={initialData ? initialData.category : null}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -85,20 +156,41 @@ const AddActivity = () => {
           <MyDatepicker
             label="Date *"
             onValueChange={handleDateChange}
+            initialValue={initialData ? initialData.date : null}
           />
         </View>
+        {initialData && initialData.special && (
+          <View style={styles.checkboxContainer}>
+            <View style={styles.section}>
+              <Text style={styles.paragraph}>
+                This item is marked as special. Select the checkbox if you would
+                like to approve it.
+              </Text>
+              <View>
+                <Checkbox
+                  style={styles.checkbox}
+                  value={isChecked}
+                  onValueChange={(newValue) => {
+                    setChecked(newValue); // Update the checked state
+                  }}
+                  color={isChecked ? Theme.colors.primary : undefined}
+                />
+              </View>
+            </View>
+          </View>
+        )}
         <View style={styles.buttonsContainer}>
           <MyButton
             title="Cancel"
             onPress={handleCancel}
-            initialTextColor={Theme.colors.cancelButtonInitial}
-            pressedTextColor={Theme.colors.cancelButtonPressed}
+            initialColor={Theme.colors.cancelButtonInitial}
+            customStyle={styles.buttons}
           />
           <MyButton
             title="Save"
             onPress={handleSave}
-            initialTextColor={Theme.colors.saveButtonInitial}
-            pressedTextColor={Theme.colors.saveButtonPressed}
+            initialColor={Theme.colors.primary}
+            customStyle={styles.buttons}
           />
         </View>
       </SafeAreaView>
@@ -138,7 +230,26 @@ const styles = StyleSheet.create({
     width: "100%",
     zIndex: 2,
     flex: 5,
-  
+  },
+  buttons: {
+    width: 150,
+    height: 40,
+  },
+  checkboxContainer: {
+    flex: 1,
+    marginHorizontal: 16,
+    marginVertical: 32,
+  },
+  section: {
+    flexDirection: "row",
+  },
+  paragraph: {
+    fontSize: 15,
+    color: Theme.colors.primary,
+    fontWeight: "bold",
+  },
+  checkbox: {
+    marginHorizontal: 8,
   },
 });
 

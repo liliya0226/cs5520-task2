@@ -3,11 +3,11 @@ import React from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useState } from "react";
 import * as Theme from "../src/styles";
-const MyDropdownPicker = ({ onValueChange, label }) => {
+const MyDropdownPicker = ({ initialValue,onValueChange, label }) => {
   // State to control the open status of the dropdown picker
   const [open, setOpen] = useState(false);
   // State to hold the currently selected value
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState(initialValue);
   // State to hold the list of items to be shown in the dropdown picker
   const [items, setItems] = useState([
     // Initial dropdown items

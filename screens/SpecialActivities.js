@@ -1,8 +1,9 @@
 import React from "react";
-import GenericActivitiesList from "../components/GenericActivitiesList";
+import ActivitiesList from "../components/ActivitiesList";
 
-const ActivitiesList = () => {
-  return <GenericActivitiesList isSpecial={true} />;
+// SpecialActivities component renders an ActivitiesList component with isSpecial prop set to true
+const SpecialActivities = () => {
+  return <ActivitiesList isSpecial={true} />;
 };
 
-export default ActivitiesList;
+export default SpecialActivities;

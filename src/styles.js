@@ -7,17 +7,17 @@ export const colors = {
   errorColor: "dimgrey",
   transparentBackground: "transparent",
   cardColor: "#00008B",
-  addButtonColor:"#FFD700",
+  addButtonColor: "#FFD700",
   cancelButtonInitial: "purple",
   cancelButtonPressed: "white",
-  saveButtonInitial: "blue",
-  saveButtonPressed: "white",
+  rippleColor: "lightgrey",
+  icon:"white",
 };
 
 // Common padding and margins
 export const spacing = {
   superSmall: "1%",
-  mediumSmall:"2%",
+  mediumSmall: "2%",
   extraSmall: "3%",
   small: "5%",
   medium: "10%",
@@ -36,12 +36,12 @@ export const padding = {
   small: 10,
   medium: 16,
   large: 20,
-  mediumLarge:"6%",
+  mediumLarge: "6%",
   extraLarge: "20%",
 };
 
 export const borderRadius = {
   small: 1,
   medium: 5,
-  large:10,
+  large: 10,
 };
