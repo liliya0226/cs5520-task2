@@ -24,7 +24,6 @@ const DurationInput = ({ value, onChangeText, label }) => {
 const styles = StyleSheet.create({
   inputContainer: {
     width: "100%", 
-
   },
   input: {
     width: "100%",

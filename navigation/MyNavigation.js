@@ -42,7 +42,7 @@ const MyNavigation = () => {
         }}
       >
         {/* Stack screen for the Start screen */}
-        {/* <Stack.Screen name="Start" component={Start} /> */}
+        <Stack.Screen name="Start" component={Start} />
         {/* Stack screen for the MyTabs navigator */}
         <Stack.Screen
           name="MyTabs"
@@ -82,7 +82,6 @@ const MyNavigation = () => {
         <Stack.Screen
           name="Edit"
           component={AddActivity}
-          // component={EditActivity}
           options={({ navigation }) => ({ headerLeft: () =>(
             // Custom back button using TouchableOpacity and AntDesign icon
             <MyButton

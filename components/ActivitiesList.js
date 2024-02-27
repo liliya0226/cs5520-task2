@@ -1,14 +1,15 @@
 import React from "react";
 import { FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ActivityBlock from "../components/ActivityBlock";
+import ActivityBlock from "./ActivityBlock";
 import { collection, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { database } from "../firebases-files/firebases-setups";
 import { useNavigation } from "@react-navigation/native";
-const GenericActivitiesList = ({ isSpecial }) => {
+const ActivitiesList = ({ isSpecial }) => {
   // Retrieve the list of all activities from the activities context
   const navigation = useNavigation();
+
   useEffect(() => {
     onSnapshot(collection(database, "Activity"), (querySnapshot) => {
       let newArray = [];
@@ -25,7 +26,6 @@ const GenericActivitiesList = ({ isSpecial }) => {
     : allActivitiesList;
   // Component rendering
   const handleActicityPress = (item) => {
-
     navigation.navigate("Edit", { data: item });
   };
 
@@ -50,4 +50,4 @@ const GenericActivitiesList = ({ isSpecial }) => {
   );
 };
 
-export default GenericActivitiesList; // Export the component
+export default ActivitiesList; // Export the component

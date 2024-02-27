@@ -8,8 +8,9 @@ const ActivityBlock = ({ category, duration, date, isSpecial, onPress }) => {
     <View>
       <Pressable
         onPress={onPress}
-        android_ripple={{ color: "lightgrey" }}
+        android_ripple={{ color: Theme.colors.rippleColor }}
         style={({ pressed }) => {
+          // Dynamically adjust style based on press state
           return [styles.blockContainer, pressed && styles.pressed];
         }}
       >
@@ -17,7 +18,7 @@ const ActivityBlock = ({ category, duration, date, isSpecial, onPress }) => {
         <View style={styles.categoryContainer}>
           <Text style={styles.categoryText}>{category}</Text>
         </View>
-        {/* Conditionally display a warning icon for activities longer than 60 minutes */}
+        {/* Conditionally display a warning icon for activities which is special */}
         {isSpecial ? (
           <Image
             style={styles.warningIcon}
@@ -94,7 +95,6 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.5,
-
   },
 });
 

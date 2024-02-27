@@ -3,13 +3,9 @@
 import React from "react";
 import MyNavigation from "./navigation/MyNavigation"; // Handles app navigation.
 
-// App component with context provider and navigation.
+// App component with navigation.
 const App = () => {
-  return (
-
-      <MyNavigation />
-
-  );
+  return <MyNavigation />;
 };
 
 export default App; // Export App component.

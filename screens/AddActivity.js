@@ -23,124 +23,113 @@ import * as Theme from "../src/styles";
 import { writeToDB } from "../firebases-files/firestoreHelper.js";
 import { updateToDB } from "../firebases-files/firestoreHelper.js";
 import { deleteToDB } from "../firebases-files/firestoreHelper.js";
-// import { collection, onSnapshot } from "firebase/firestore";
 // Component to add a new activity
 const AddActivity = () => {
-  // Hook to access the addActivity function from context
-
   // Hook to navigate between screens
   const navigation = useNavigation();
+  // Hook to access route parameters
   const route = useRoute();
+  // Extract initial data passed through route, if any
   const initialData = route.params?.data;
 
-  // State for form inputs
+  // State hooks for form inputs, initialized with initialData if available
   const [category, setCategory] = useState(initialData?.category || null);
   const [duration, setDuration] = useState(initialData?.duration || "");
   const [date, setDate] = useState(initialData?.date || "");
+  const [isChecked, setChecked] = useState(false); // State for checkbox
 
-  const [isChecked, setChecked] = useState(false);
-  // Handlers for form inputs
+  // Handlers to update state based on user input
   const handleCategoryChange = (newCategory) => setCategory(newCategory);
   const handleDurationChange = (newDuration) => setDuration(newDuration);
   const handleDateChange = (newDate) => setDate(newDate);
 
-  // Handler to cancel and go back to the previous screen
+  // Handler to navigate back to the previous screen
   const handleCancel = () => navigation.goBack();
+
+  // Handler for deleting an activity
   const handleDelete = (id) => {
-    // Show a confirmation dialog
+    // Show confirmation dialog before deletion
     Alert.alert("Delete", "Are you sure you want to delete this item?", [
-      // The "No" button
-      // Does nothing but dismiss the dialog when pressed
-      {
-        text: "No",
-        onPress: () => {},
-        style: "cancel",
-      },
-      // The "Yes" button
-      // Calls the deleteToDB function when pressed
+      { text: "No", onPress: () => {}, style: "cancel" }, // No action, just close dialog
       {
         text: "Yes",
         onPress: () => {
-          deleteToDB(id);
-          navigation.goBack();
+          deleteToDB(id); // Perform delete operation
+          navigation.goBack(); // Navigate back after deletion
         },
       },
     ]);
   };
+
+  // Effect hook to set the navigation options dynamically
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => {
-        return (
-          <MyButton onPress={() => handleDelete(initialData.id)}>
-            <AntDesign name="delete" size={24} color="white" />
-          </MyButton>
-        );
-      },
+      headerRight: () => (
+        // Render delete button in header if there's initialData
+        <MyButton onPress={() => handleDelete(initialData.id)}>
+          <AntDesign name="delete" size={24} color={Theme.colors.icon}/>
+        </MyButton>
+      ),
     });
   }, [initialData, navigation]);
-  // Validates form inputs
+
+  // Function to validate user inputs
   const validateUserEntries = () => {
+    // Validation checks for category, duration, and date
     if (!category || category.trim() === "") {
-      // Check for non-empty category
       Alert.alert("Invalid Input", "Category must be selected.");
       return false;
     }
     if (isNaN(duration) || parseFloat(duration) <= 0) {
-      // Check for valid number in duration
       Alert.alert("Invalid Input", "Duration must be a positive number.");
       return false;
     }
     if (date.trim() === "") {
-      // Check for non-empty date
       Alert.alert("Invalid Input", "Date must be selected.");
       return false;
     }
-    return true;
+    return true; // Return true if all validations pass
   };
 
+  // Handler for saving activity data
   const handleSave = () => {
-    if (validateUserEntries()) {
+    if (validateUserEntries()) { // Check if user entries are valid
       if (initialData) {
-        Alert.alert(
-          "Important",
-          "Are you sure you want to save these changes?",
-          [
-            {
-              text: "Cancel",
-              style: "cancel",
+        // If updating existing activity, show confirmation dialog
+        Alert.alert("Important", "Are you sure you want to save these changes?", [
+          { text: "Cancel", style: "cancel" }, // No action, just close dialog
+          {
+            text: "Yes",
+            onPress: () => {
+              // Prepare updated activity data
+              const updatedActivity = {
+                category: category,
+                duration: parseInt(duration, 10),
+                date: date,
+                special: isChecked ? false : parseInt(duration, 10) > 60,
+              };
+              updateToDB(initialData.id, updatedActivity); // Perform update operation
+              navigation.goBack(); // Navigate back after update
             },
-            {
-              text: "Yes",
-              onPress: () => {
-                const updatedActivity = {
-                  category: category,
-                  duration: parseInt(duration, 10),
-                  date: date,
-                  special: isChecked ? false : parseInt(duration, 10) > 60,
-                };
-                updateToDB(initialData.id, updatedActivity);
-                navigation.goBack(); // Navigate back after update
-              },
-            },
-          ]
-        );
+          },
+        ]);
       } else {
+        // If adding new activity, prepare new activity data
         const newActivity = {
           category: category,
           duration: parseInt(duration, 10),
           date: date,
           special: parseInt(duration, 10) > 60,
         };
-        writeToDB(newActivity);
-        setCategory(""); // Reset form
+        writeToDB(newActivity); // Perform add operation
+        // Reset form inputs
+        setCategory(""); 
         setDate("");
         setDuration("");
-    
-        navigation.goBack(); // Navigate back after adding new
+        navigation.goBack(); // Navigate back after adding new activity
       }
     }
   };
-
   // Component UI
   return (
     <KeyboardAvoidingView
@@ -183,7 +172,6 @@ const AddActivity = () => {
                   value={isChecked}
                   onValueChange={(newValue) => {
                     setChecked(newValue); // Update the checked state
-                
                   }}
                   color={isChecked ? Theme.colors.primary : undefined}
                 />
@@ -258,7 +246,7 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: 15,
     color: Theme.colors.primary,
-    fontWeight: 'bold' ,
+    fontWeight: "bold",
   },
   checkbox: {
     marginHorizontal: 8,
